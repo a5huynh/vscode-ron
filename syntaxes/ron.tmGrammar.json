@@ -1,0 +1,101 @@
+{
+  "scopeName": "source.ron",
+  "patterns": [
+    { "include": "#expression" }
+  ],
+  "repository": {
+    "expression": {
+      "patterns": [
+        { "include": "#array" },
+        { "include": "#block_comment" },
+        { "include": "#constant" },
+        { "include": "#dictionary" },
+        { "include": "#line_comment" },
+        { "include": "#number" },
+        { "include": "#object" },
+        { "include": "#string" }
+      ]
+    },
+    "array": {
+      "begin": "\\[",
+      "end": "\\]",
+      "beginCaptures": {
+        "0": { "name": "punctuation.section.array.begin.ron" }
+      },
+      "endCaptures": {
+        "0": { "name": "punctuation.section.array.end.ron" }
+      },
+
+      "patterns": [
+        { "meta_scope": "meta.structure.array.ron" },
+        { "include": "#value" }
+      ]
+    },
+    "block_comment": {
+      "name": "punctuation.definition.comment.ron",
+      "begin": "/\\*\\*(?!/)",
+      "end": "\\*/"
+    },
+    "constant": {
+      "match": "\\b(true|false)\\b",
+      "name": "constant.language.ron"
+    },
+    "dictionary": {
+      "begin": "\\{",
+      "end": "\\}",
+      "beginCaptures": {
+        "0": { "name": "punctuation.section.dictionary.begin.ron" }
+      },
+      "endCaptures": {
+        "0": { "name": "punctuation.section.dictionary.end.ron" }
+      },
+      "patterns": [
+        { "include": "#value" },
+        { "match": ":", "name": "punctuation.separator.dictionary.key-value.ron" },
+        { "include": "#value" },
+        { "match": ",", "name": "punctuation.separator.dictionary.ron" }
+      ]
+    },
+    "line_comment": {
+      "name": "comment.line.double-slash.ron",
+      "begin": "//",
+      "end": "$"
+    },
+    "object": {
+      "match": "[A-Za-z_][A-Za-z_0-9]*",
+      "name": "entity.name.tag.ron",
+      "push": [
+        {
+          "match": "\\(",
+          "name": "punctuation.section.dictionary.begin.ron"
+        },
+        { "include": "#dictionary" },
+        {
+          "match": "\\)",
+          "name": "punctuation.section.dictionary.end.ron"
+        }
+      ]
+    },
+    "number": {
+      "match": "(?x:         # turn on extended mode\n  -?         # an optional minus\n  (?:\n    0        # a zero\n    |        # ...or...\n    [1-9]    # a 1-9 character\n    \\d*      # followed by zero or more digits\n  )\n  (?:\n    (?:\n      \\.     # a period\n      \\d+    # followed by one or more digits\n    )?\n    (?:\n      [eE]   # an e character\n      [+-]?  # followed by an option +/-\n      \\d+    # followed by one or more digits\n    )?       # make exponent optional\n  )?         # make decimal portion optional\n)",
+      "name": "constant.numeric.ron"
+    },
+    "string": {
+      "begin": "\"",
+      "end": "\"",
+      "name": "string.quoted.double"
+    },
+    "value": {
+      "patterns": [
+        { "include": "#array" },
+        { "include": "#block_comment" },
+        { "include": "#constant" },
+        { "include": "#dictionary" },
+        { "include": "#line_comment" },
+        { "include": "#number" },
+        { "include": "#object" },
+        { "include": "#string" }
+      ]
+    }
+  }
+}
