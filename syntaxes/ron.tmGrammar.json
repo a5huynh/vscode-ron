@@ -12,8 +12,10 @@
         { "include": "#dictionary" },
         { "include": "#line_comment" },
         { "include": "#number" },
+        { "include": "#object-name" },
         { "include": "#object" },
-        { "include": "#string" }
+        { "include": "#string" },
+        { "include": "#tag-name" }
       ]
     },
     "array": {
@@ -51,9 +53,11 @@
       },
       "patterns": [
         { "include": "#value" },
-        { "match": ":", "name": "punctuation.separator.dictionary.key-value.ron" },
-        { "include": "#value" },
-        { "match": ",", "name": "punctuation.separator.dictionary.ron" }
+        { "include": "#object-name" },
+        { "include": "#object" },
+        { "include": "#tag-name" },
+        { "match": ",", "name": "punctuation.separator.dictionary.ron" },
+        { "match": ":", "name": "punctuation.separator.dictionary.key-value.ron" }
       ]
     },
     "line_comment": {
@@ -61,19 +65,29 @@
       "begin": "//",
       "end": "$"
     },
-    "object": {
+    "tag-name": {
+      "match": "[a-z_][A-Za-z_0-9]*",
+      "name": "entity.name.tag.ron"
+    },
+    "object-name": {
       "match": "[A-Za-z_][A-Za-z_0-9]*",
-      "name": "entity.name.tag.ron",
-      "push": [
-        {
-          "match": "\\(",
-          "name": "punctuation.section.dictionary.begin.ron"
-        },
+      "name": "entity.name.class.ron"
+    },
+    "object": {
+      "begin": "\\(",
+      "end":  "\\)",
+      "beginCaptures": {
+        "0": { "name": "punctuation.section.dictionary.begin.ron" }
+      },
+      "endCaptures": {
+        "0": { "name": "punctuation.section.dictionary.end.ron" }
+      },
+      "patterns": [
+        { "include": "#value" },
         { "include": "#dictionary" },
-        {
-          "match": "\\)",
-          "name": "punctuation.section.dictionary.end.ron"
-        }
+        { "include": "#tag-name" },
+        { "include": "#object-name" },
+        { "include": "#object" }
       ]
     },
     "number": {
