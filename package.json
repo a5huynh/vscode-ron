@@ -1,0 +1,37 @@
+{
+    "name": "vscode-ron",
+    "displayName": "vscode-ron",
+    "description": "Rusty Object Notation (RON) syntax package",
+    "version": "0.0.1",
+    "engines": {
+        "vscode": "^1.30.0"
+    },
+    "categories": [
+        "Programming Languages"
+    ],
+    "contributes": {
+        "languages": [
+            {
+                "id": "ron",
+                "aliases": [
+                    "Rusty Object Notation (RON)",
+                    "ron"
+                ],
+                "extensions": [
+                    ".ron"
+                ],
+                "configuration": "./language-configuration.json"
+            }
+        ],
+        "grammars": [
+            {
+                "language": "ron",
+                "scopeName": "source.ron",
+                "path": "./syntaxes/ron.tmGrammar.json"
+            }
+        ]
+    },
+    "devDependencies": {
+        "js-yaml": "^3.12.1"
+    }
+}
