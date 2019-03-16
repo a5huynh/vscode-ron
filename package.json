@@ -2,6 +2,8 @@
     "name": "vscode-ron",
     "displayName": "vscode-ron",
     "description": "Rusty Object Notation (RON) syntax package",
+    "publisher": "a5huynh",
+    "repository": "https://github.com/a5huynh/vscode-ron",
     "version": "0.0.1",
     "engines": {
         "vscode": "^1.30.0"
