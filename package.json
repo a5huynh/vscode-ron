@@ -4,7 +4,7 @@
     "description": "Rusty Object Notation (RON) syntax package",
     "publisher": "a5huynh",
     "repository": "https://github.com/a5huynh/vscode-ron",
-    "version": "0.0.1",
+    "version": "0.1.0",
     "engines": {
         "vscode": "^1.30.0"
     },
