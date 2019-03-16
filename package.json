@@ -3,7 +3,15 @@
     "displayName": "vscode-ron",
     "description": "Rusty Object Notation (RON) syntax package",
     "publisher": "a5huynh",
-    "repository": "https://github.com/a5huynh/vscode-ron",
+    "license": "MIT",
+    "homepage": "https://github.com/a5huynh/vscode-ron",
+    "bugs": {
+        "url": "https://github.com/a5huynh/vscode-ron/issues"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/a5huynh/vscode-ron"
+    },
     "version": "0.1.0",
     "engines": {
         "vscode": "^1.30.0"
@@ -32,8 +40,5 @@
                 "path": "./syntaxes/ron.tmGrammar.json"
             }
         ]
-    },
-    "devDependencies": {
-        "js-yaml": "^3.12.1"
     }
 }
