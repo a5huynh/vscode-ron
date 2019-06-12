@@ -35,7 +35,7 @@
     },
     "block_comment": {
       "name": "punctuation.definition.comment.ron",
-      "begin": "/\\*\\*(?!/)",
+      "begin": "/\\*",
       "end": "\\*/"
     },
     "constant": {
