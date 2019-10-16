@@ -27,10 +27,10 @@
       "endCaptures": {
         "0": { "name": "punctuation.section.array.end.ron" }
       },
-
       "patterns": [
-        { "meta_scope": "meta.structure.array.ron" },
-        { "include": "#value" }
+        { "include": "#value" },
+        { "include": "#object-name" },
+        { "meta_scope": "meta.structure.array.ron" }
       ]
     },
     "block_comment": {
