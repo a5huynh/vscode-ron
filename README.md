@@ -4,6 +4,12 @@ vscode-ron is a RON syntax package for VS Code.  Loosely based on
 https://github.com/ron-rs/sublime-ron
 
 
+## Where can I get this?
+
+- [Visual Studio Code Marketplace](https://marketplace.visualstudio.com/items?itemName=a5huynh.vscode-ron)
+- [OpenVSX Marketplace](https://open-vsx.org/extension/a5huynh/vscode-ron)
+
+
 ## What is RON?
 
 [Rusty Object Notation](https://github.com/ron-rs/ron) (RON) is a simple
