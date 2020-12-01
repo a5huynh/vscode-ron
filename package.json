@@ -40,5 +40,8 @@
                 "path": "./syntaxes/ron.tmGrammar.json"
             }
         ]
+    },
+    "dependencies": {
+        "vsce": "^1.81.1"
     }
 }
