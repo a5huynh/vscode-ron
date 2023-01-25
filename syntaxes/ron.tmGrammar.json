@@ -15,6 +15,7 @@
         { "include": "#object-name" },
         { "include": "#object" },
         { "include": "#string" },
+        { "include": "#character" },
         { "include": "#tag-name" }
       ]
     },
@@ -99,6 +100,12 @@
       "end": "\"",
       "name": "string.quoted.double"
     },
+    "character": {
+      "begin": "'",
+      "end": "'",
+      "contentName": "constant.character.ron",
+      "name": "string.quoted.single"
+    },
     "value": {
       "patterns": [
         { "include": "#array" },
@@ -108,7 +115,8 @@
         { "include": "#line_comment" },
         { "include": "#number" },
         { "include": "#object" },
-        { "include": "#string" }
+        { "include": "#string" },
+        { "include": "#character" }
       ]
     }
   }
