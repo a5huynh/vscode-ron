@@ -12,7 +12,7 @@
         "type": "git",
         "url": "https://github.com/a5huynh/vscode-ron"
     },
-    "version": "0.9.0",
+    "version": "0.10.0",
     "engines": {
         "vscode": "^1.30.0"
     },
