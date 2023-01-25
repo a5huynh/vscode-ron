@@ -5,3 +5,4 @@ vsc-extension-quickstart.md
 *.txt
 syntaxes/*
 !syntaxes/ron.tmGrammar.json
+node_modules
