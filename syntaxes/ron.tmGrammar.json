@@ -96,9 +96,10 @@
       "name": "constant.numeric.ron"
     },
     "string": {
-      "begin": "\"",
+      "begin": "(b?)(\")",
       "end": "\"",
-      "name": "string.quoted.double"
+      "name": "string.quoted.double",
+      "patterns": [{ "include": "#escapes" }]
     },
     "character": {
       "begin": "'",
@@ -118,6 +119,28 @@
         { "include": "#string" },
         { "include": "#character" }
       ]
+    },
+    "escapes": {
+      "comment": "escapes: ASCII, byte, Unicode, quote, regex",
+      "name": "constant.character.escape.ron",
+      "match": "(\\\\)(?:(?:(x[0-7][0-7a-fA-F])|(u(\\{)[\\da-fA-F]{4,6}(\\}))|.))",
+      "captures": {
+        "1": {
+          "name": "constant.character.escape.backslash.ron"
+        },
+        "2": {
+          "name": "constant.character.escape.bit.ron"
+        },
+        "3": {
+          "name": "constant.character.escape.unicode.ron"
+        },
+        "4": {
+          "name": "constant.character.escape.unicode.punctuation.ron"
+        },
+        "5": {
+          "name": "constant.character.escape.unicode.punctuation.ron"
+        }
+      }
     }
   }
 }
