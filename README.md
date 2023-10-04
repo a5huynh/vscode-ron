@@ -23,3 +23,18 @@ for more information!
 Here's a lovely example of what a basic `.ron` file will now look like:
 
 ![Syntax highlighting example](docs/example.png)
+
+
+# Development
+
+Check out VS Code's excellent guide on syntax highlighting extensions [here][extension-guide].
+That will help you get setup with the right tooling to start making/testing changes to the grammar.
+
+[extension-guide]: https://code.visualstudio.com/api/language-extensions/syntax-highlight-guide
+
+## Debugging extension
+
+While in VSCode, press `F5` (or `Run` -> `Start Debugging`) to launch a
+version of VSCode with the extension loaded.
+
+Load `./docs/example.ron` if you need an example RON file to work on.
