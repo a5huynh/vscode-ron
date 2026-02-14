@@ -13,11 +13,12 @@
         { "include": "#line_comment" },
         { "include": "#number" },
         { "include": "#raw_string" },
-        { "include": "#object-name" },
+        { "include": "#struct-field" },
+        { "include": "#struct-name" },
         { "include": "#object" },
         { "include": "#string" },
         { "include": "#character" },
-        { "include": "#tag-name" }
+        { "include": "#enum-variant" }
       ]
     },
     "array": {
@@ -31,14 +32,17 @@
       },
       "patterns": [
         { "include": "#value" },
-        { "include": "#object-name" },
+        { "include": "#struct-name" },
         { "meta_scope": "meta.structure.array.ron" }
       ]
     },
     "block_comment": {
       "name": "comment.block.ron",
       "begin": "/\\*",
-      "end": "\\*/"
+      "end": "\\*/",
+      "patterns": [
+        { "include": "#block_comment" }
+      ]
     },
     "constant": {
       "match": "\\b(true|false)\\b",
@@ -55,9 +59,9 @@
       },
       "patterns": [
         { "include": "#value" },
-        { "include": "#object-name" },
+        { "include": "#struct-name" },
         { "include": "#object" },
-        { "include": "#tag-name" },
+        { "include": "#enum-variant" },
         { "match": ",", "name": "punctuation.separator.dictionary.ron" },
         { "match": ":", "name": "punctuation.separator.dictionary.key-value.ron" }
       ]
@@ -67,34 +71,65 @@
       "begin": "//",
       "end": "$"
     },
-    "tag-name": {
+    "struct-field": {
+      "comment": "Struct field key: identifier followed by :",
+      "match": "([a-z_][A-Za-z_0-9]*)\\s*(:)",
+      "captures": {
+        "1": { "name": "variable.other.member.ron" },
+        "2": { "name": "punctuation.separator.key-value.ron" }
+      }
+    },
+    "struct-name": {
+      "comment": "Struct/type name: capitalized identifier typically followed by ( or {",
+      "match": "[A-Z][A-Za-z_0-9]*",
+      "name": "entity.name.type.ron"
+    },
+    "enum-variant": {
+      "comment": "Enum variant or field name (lowercase identifier not followed by :)",
       "match": "[a-z_][A-Za-z_0-9]*",
       "name": "entity.name.tag.ron"
-    },
-    "object-name": {
-      "match": "[A-Za-z_][A-Za-z_0-9]*",
-      "name": "entity.name.class.ron"
     },
     "object": {
       "begin": "\\(",
       "end":  "\\)",
       "beginCaptures": {
-        "0": { "name": "punctuation.section.dictionary.begin.ron" }
+        "0": { "name": "punctuation.section.parens.begin.ron" }
       },
       "endCaptures": {
-        "0": { "name": "punctuation.section.dictionary.end.ron" }
+        "0": { "name": "punctuation.section.parens.end.ron" }
       },
       "patterns": [
         { "include": "#value" },
         { "include": "#dictionary" },
-        { "include": "#tag-name" },
-        { "include": "#object-name" },
+        { "include": "#struct-field" },
+        { "include": "#struct-name" },
+        { "include": "#enum-variant" },
         { "include": "#object" }
       ]
     },
     "number": {
-      "match": "(?x:-?(?:0|[1-9]\\d*)(?:(?:\\.\\d+)?(?:[eE][+-]?\\d+)?)?)",
-      "name": "constant.numeric.ron"
+      "patterns": [
+        {
+          "comment": "Hexadecimal integer",
+          "match": "-?\\b0x[0-9a-fA-F_]+\\b",
+          "name": "constant.numeric.hex.ron"
+        },
+        {
+          "comment": "Binary integer",
+          "match": "-?\\b0b[01_]+\\b",
+          "name": "constant.numeric.binary.ron"
+        },
+        {
+          "comment": "Octal integer",
+          "match": "-?\\b0o[0-7_]+\\b",
+          "name": "constant.numeric.octal.ron"
+        },
+        {
+          "comment": "Float or decimal integer",
+          "match": "-?\\b[0-9][0-9_]*(?:\\.[0-9][0-9_]*)?(?:[eE][+-]?[0-9_]+)?\\b",
+          "name": "constant.numeric.ron"
+        }
+      ]
     },
     "raw_string": {
       "patterns": [
