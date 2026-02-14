@@ -12,9 +12,9 @@
         { "include": "#dictionary" },
         { "include": "#line_comment" },
         { "include": "#number" },
+        { "include": "#raw_string" },
         { "include": "#object-name" },
         { "include": "#object" },
-        { "include": "#raw_string" },
         { "include": "#string" },
         { "include": "#character" },
         { "include": "#tag-name" }

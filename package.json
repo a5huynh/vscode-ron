@@ -42,6 +42,8 @@
         ]
     },
     "dependencies": {
-        "vsce": "^2.14.0"
+        "vsce": "^2.14.0",
+        "vscode-oniguruma": "^2.0.1",
+        "vscode-textmate": "^9.3.2"
     }
 }
