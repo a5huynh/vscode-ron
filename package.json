@@ -1,7 +1,7 @@
 {
     "name": "vscode-ron",
     "displayName": "vscode-ron",
-    "description": "Rusty Object Notation (RON) syntax package",
+    "description": "Rusty Object Notation (RON) syntax package with formatting support",
     "publisher": "a5huynh",
     "license": "MIT",
     "homepage": "https://github.com/a5huynh/vscode-ron",
@@ -12,13 +12,23 @@
         "type": "git",
         "url": "https://github.com/a5huynh/vscode-ron"
     },
-    "version": "0.11.0",
+    "version": "0.12.0",
     "engines": {
-        "vscode": "^1.30.0"
+        "vscode": "^1.75.0"
     },
     "categories": [
-        "Programming Languages"
+        "Programming Languages",
+        "Formatters"
     ],
+    "activationEvents": [
+        "onLanguage:ron"
+    ],
+    "main": "./out/extension.js",
+    "scripts": {
+        "vscode:prepublish": "npm run compile",
+        "compile": "node node_modules/typescript/bin/tsc -p ./",
+        "watch": "node node_modules/typescript/bin/tsc -watch -p ./"
+    },
     "contributes": {
         "languages": [
             {
@@ -39,7 +49,50 @@
                 "scopeName": "source.ron",
                 "path": "./syntaxes/ron.tmGrammar.json"
             }
-        ]
+        ],
+        "commands": [
+            {
+                "command": "ron.formatDocument",
+                "title": "Format RON Document",
+                "category": "RON"
+            }
+        ],
+        "configuration": {
+            "title": "RON",
+            "properties": {
+                "ron.formatter.path": {
+                    "type": "string",
+                    "default": "fmtron",
+                    "description": "Path to the RON formatter binary (e.g., fmtron). Must be installed and available on PATH, or provide an absolute path."
+                },
+                "ron.formatter.maxWidth": {
+                    "type": "number",
+                    "default": 80,
+                    "description": "Maximum line width for the formatter (soft limit)."
+                },
+                "ron.formatter.useStdin": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "If true, pipe document content via stdin/stdout instead of using a temporary file. Enable this if your formatter supports stdin mode."
+                },
+                "ron.formatter.extraArgs": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "default": [],
+                    "description": "Additional arguments to pass to the formatter binary."
+                },
+                "[ron]": {
+                    "editor.defaultFormatter": "a5huynh.vscode-ron"
+                }
+            }
+        }
+    },
+    "devDependencies": {
+        "@types/node": "^18.19.130",
+        "@types/vscode": "^1.75.0",
+        "typescript": "^5.9.3"
     },
     "dependencies": {
         "vsce": "^2.14.0",

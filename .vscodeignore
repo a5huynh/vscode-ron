@@ -1,8 +1,8 @@
 .vscode/**
 .vscode-test/**
+src/**
+node_modules/**
+tsconfig.json
+**/*.ts
+**/*.map
 .gitignore
-vsc-extension-quickstart.md
-*.txt
-syntaxes/*
-!syntaxes/ron.tmGrammar.json
-node_modules
