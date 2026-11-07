@@ -6,3 +6,5 @@ vsc-extension-quickstart.md
 syntaxes/*
 !syntaxes/ron.tmGrammar.json
 node_modules
+.env*
+justfile
