@@ -41,6 +41,9 @@
             }
         ]
     },
+    "scripts": {
+        "test": "node test-grammar.js"
+    },
     "devDependencies": {
         "vsce": "^2.14.0",
         "vscode-oniguruma": "^2.0.1",

@@ -8,3 +8,4 @@ syntaxes/*
 node_modules
 .env*
 justfile
+.github/**
