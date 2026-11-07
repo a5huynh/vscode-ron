@@ -1,3 +1,5 @@
+set dotenv-filename := ".env.local"
+
 version := `node -p "require('./package.json').version"`
 vsix := "vscode-ron-" + version + ".vsix"
 
