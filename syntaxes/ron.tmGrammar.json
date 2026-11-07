@@ -6,14 +6,17 @@
   "repository": {
     "expression": {
       "patterns": [
+        { "include": "#attribute" },
         { "include": "#array" },
         { "include": "#block_comment" },
         { "include": "#constant" },
         { "include": "#dictionary" },
         { "include": "#line_comment" },
         { "include": "#number" },
+        { "include": "#range" },
         { "include": "#raw_string" },
         { "include": "#struct-field" },
+        { "include": "#option" },
         { "include": "#struct-name" },
         { "include": "#object" },
         { "include": "#string" },
@@ -21,7 +24,43 @@
         { "include": "#enum-variant" }
       ]
     },
+    "attribute": {
+      "comment": "Extensions attribute, e.g. #![enable(implicit_some)]",
+      "name": "meta.attribute.ron",
+      "begin": "(#)\\s*(!)\\s*(\\[)",
+      "end": "\\]",
+      "beginCaptures": {
+        "1": { "name": "punctuation.definition.attribute.ron" },
+        "2": { "name": "punctuation.definition.attribute.ron" },
+        "3": { "name": "punctuation.definition.attribute.begin.ron" }
+      },
+      "endCaptures": {
+        "0": { "name": "punctuation.definition.attribute.end.ron" }
+      },
+      "patterns": [
+        { "include": "#block_comment" },
+        { "include": "#line_comment" },
+        {
+          "begin": "\\b(enable)\\s*(\\()",
+          "end": "\\)",
+          "beginCaptures": {
+            "1": { "name": "keyword.other.attribute.ron" },
+            "2": { "name": "punctuation.section.parens.begin.ron" }
+          },
+          "endCaptures": {
+            "0": { "name": "punctuation.section.parens.end.ron" }
+          },
+          "patterns": [
+            { "include": "#block_comment" },
+            { "include": "#line_comment" },
+            { "match": "[A-Za-z_][A-Za-z_0-9]*", "name": "support.constant.extension.ron" },
+            { "match": ",", "name": "punctuation.separator.attribute.ron" }
+          ]
+        }
+      ]
+    },
     "array": {
+      "name": "meta.structure.array.ron",
       "begin": "\\[",
       "end": "\\]",
       "beginCaptures": {
@@ -32,8 +71,10 @@
       },
       "patterns": [
         { "include": "#value" },
+        { "include": "#option" },
         { "include": "#struct-name" },
-        { "meta_scope": "meta.structure.array.ron" }
+        { "include": "#enum-variant" },
+        { "match": ",", "name": "punctuation.separator.array.ron" }
       ]
     },
     "block_comment": {
@@ -59,6 +100,7 @@
       },
       "patterns": [
         { "include": "#value" },
+        { "include": "#option" },
         { "include": "#struct-name" },
         { "include": "#object" },
         { "include": "#enum-variant" },
@@ -78,6 +120,10 @@
         "1": { "name": "variable.other.member.ron" },
         "2": { "name": "punctuation.separator.key-value.ron" }
       }
+    },
+    "option": {
+      "match": "\\b(?:Some|None)\\b",
+      "name": "entity.name.type.option.ron"
     },
     "struct-name": {
       "comment": "Struct/type name: capitalized identifier typically followed by ( or {",
@@ -102,87 +148,142 @@
         { "include": "#value" },
         { "include": "#dictionary" },
         { "include": "#struct-field" },
+        { "include": "#option" },
         { "include": "#struct-name" },
         { "include": "#enum-variant" },
-        { "include": "#object" }
+        { "include": "#object" },
+        { "match": ",", "name": "punctuation.separator.parens.ron" }
       ]
     },
     "number": {
       "patterns": [
         {
+          "comment": "Special floats: inf, NaN (not when used as a field name)",
+          "match": "(?<!\\w)[+-]?\\b(?:inf|NaN)(f32|f64)?\\b(?!\\s*:)",
+          "name": "constant.language.float.ron",
+          "captures": {
+            "1": {
+              "name": "storage.type.numeric.ron"
+            }
+          }
+        },
+        {
           "comment": "Hexadecimal integer",
-          "match": "-?\\b0x[0-9a-fA-F_]+\\b",
-          "name": "constant.numeric.hex.ron"
+          "match": "(?<!\\w)[+-]?\\b0x[0-9a-fA-F][0-9a-fA-F_]*((?:[iu](?:8|16|32|64|128)))?\\b",
+          "name": "constant.numeric.hex.ron",
+          "captures": {
+            "1": {
+              "name": "storage.type.numeric.ron"
+            }
+          }
         },
         {
           "comment": "Binary integer",
-          "match": "-?\\b0b[01_]+\\b",
-          "name": "constant.numeric.binary.ron"
+          "match": "(?<!\\w)[+-]?\\b0b[01][01_]*((?:[iu](?:8|16|32|64|128)))?\\b",
+          "name": "constant.numeric.binary.ron",
+          "captures": {
+            "1": {
+              "name": "storage.type.numeric.ron"
+            }
+          }
         },
         {
           "comment": "Octal integer",
-          "match": "-?\\b0o[0-7_]+\\b",
-          "name": "constant.numeric.octal.ron"
+          "match": "(?<!\\w)[+-]?\\b0o[0-7][0-7_]*((?:[iu](?:8|16|32|64|128)))?\\b",
+          "name": "constant.numeric.octal.ron",
+          "captures": {
+            "1": {
+              "name": "storage.type.numeric.ron"
+            }
+          }
         },
         {
-          "comment": "Float or decimal integer",
-          "match": "-?\\b[0-9][0-9_]*(?:\\.[0-9][0-9_]*)?(?:[eE][+-]?[0-9_]+)?\\b",
-          "name": "constant.numeric.ron"
+          "comment": "Float or decimal integer: 1, 1.5, 1., .5, 1e10, with optional type suffix. `1..2` is a range, not `1.` + `.2`",
+          "match": "(?<!\\w)[+-]?(?:\\b[0-9][0-9_]*(?:\\.(?!\\.)(?:[0-9][0-9_]*)?)?|(?<!\\.)\\.[0-9][0-9_]*)(?:[eE][+-]?[0-9_]*[0-9][0-9_]*)?((?:[iu](?:8|16|32|64|128))|f(?:32|64))?(?!\\w)",
+          "name": "constant.numeric.ron",
+          "captures": {
+            "1": {
+              "name": "storage.type.numeric.ron"
+            }
+          }
         }
       ]
+    },
+    "range": {
+      "match": "\\.\\.=?",
+      "name": "keyword.operator.range.ron"
     },
     "raw_string": {
+      "comment": "Raw (byte) strings with any number of #: r\"...\", r#\"...\"#, br##\"...\"##",
+      "name": "string.quoted.other.raw.ron",
+      "begin": "\\b(b?r)(#*)(\\\")",
+      "end": "(\\\")(\\2)",
+      "beginCaptures": {
+        "1": {
+          "name": "storage.type.string.ron"
+        },
+        "2": {
+          "name": "punctuation.definition.string.begin.ron"
+        },
+        "3": {
+          "name": "punctuation.definition.string.begin.ron"
+        }
+      },
+      "endCaptures": {
+        "1": {
+          "name": "punctuation.definition.string.end.ron"
+        },
+        "2": {
+          "name": "punctuation.definition.string.end.ron"
+        }
+      }
+    },
+    "string": {
+      "name": "string.quoted.double.ron",
+      "begin": "(?<!\\w)(b?)(\\\")",
+      "end": "\"",
+      "beginCaptures": {
+        "1": {
+          "name": "storage.type.string.ron"
+        },
+        "2": {
+          "name": "punctuation.definition.string.begin.ron"
+        }
+      },
+      "endCaptures": {
+        "0": {
+          "name": "punctuation.definition.string.end.ron"
+        }
+      },
       "patterns": [
         {
-          "comment": "Raw string r#####\"...\"#####",
-          "begin": "r#{5}\"",
-          "end": "\"#{5}",
-          "name": "string.quoted.other.raw.ron"
-        },
-        {
-          "comment": "Raw string r####\"...\"####",
-          "begin": "r#{4}\"",
-          "end": "\"#{4}",
-          "name": "string.quoted.other.raw.ron"
-        },
-        {
-          "comment": "Raw string r###\"...\"###",
-          "begin": "r#{3}\"",
-          "end": "\"#{3}",
-          "name": "string.quoted.other.raw.ron"
-        },
-        {
-          "comment": "Raw string r##\"...\"##",
-          "begin": "r#{2}\"",
-          "end": "\"#{2}",
-          "name": "string.quoted.other.raw.ron"
-        },
-        {
-          "comment": "Raw string r#\"...\"#",
-          "begin": "r#\"",
-          "end": "\"#",
-          "name": "string.quoted.other.raw.ron"
-        },
-        {
-          "comment": "Raw string r\"...\"",
-          "begin": "r\"",
-          "end": "\"",
-          "name": "string.quoted.other.raw.ron"
+          "include": "#escapes"
         }
       ]
     },
-    "string": {
-      "begin": "(b?)(\")",
-      "end": "\"",
-      "name": "string.quoted.double",
-      "patterns": [{ "include": "#escapes" }]
-    },
     "character": {
-      "begin": "'",
+      "name": "string.quoted.single.ron",
+      "begin": "(?<!\\w)(b?)(')",
       "end": "'",
       "contentName": "constant.character.ron",
-      "name": "string.quoted.single",
-      "patterns": [{ "include": "#escapes" }]
+      "beginCaptures": {
+        "1": {
+          "name": "storage.type.string.ron"
+        },
+        "2": {
+          "name": "punctuation.definition.string.begin.ron"
+        }
+      },
+      "endCaptures": {
+        "0": {
+          "name": "punctuation.definition.string.end.ron"
+        }
+      },
+      "patterns": [
+        {
+          "include": "#escapes"
+        }
+      ]
     },
     "value": {
       "patterns": [
@@ -192,6 +293,7 @@
         { "include": "#dictionary" },
         { "include": "#line_comment" },
         { "include": "#number" },
+        { "include": "#range" },
         { "include": "#object" },
         { "include": "#raw_string" },
         { "include": "#string" },
@@ -199,9 +301,9 @@
       ]
     },
     "escapes": {
-      "comment": "escapes: ASCII, byte, Unicode, quote, regex",
+      "comment": "escapes: \\n \\r \\t \\0 \\\\ \\' \\\", byte \\xHH, unicode \\u{H..HHHHHH}",
       "name": "constant.character.escape.ron",
-      "match": "(\\\\)(?:(?:(x[0-7][0-7a-fA-F])|(u(\\{)[\\da-fA-F]{4,6}(\\}))|.))",
+      "match": "(\\\\)(?:(x[0-9a-fA-F]{2})|(u(\\{)[0-9a-fA-F]{1,6}(\\}))|.)",
       "captures": {
         "1": {
           "name": "constant.character.escape.backslash.ron"
