@@ -9,3 +9,9 @@ node_modules
 .env*
 justfile
 .github/**
+src/**
+test/**
+tsconfig.json
+out/**/*.map
+test-grammar.js
+.git

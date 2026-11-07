@@ -18,4 +18,6 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
+      - run: npm run compile
       - run: npm test
+      - run: npx vsce ls

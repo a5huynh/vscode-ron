@@ -1,7 +1,7 @@
 {
     "name": "vscode-ron",
     "displayName": "vscode-ron",
-    "description": "Rusty Object Notation (RON) syntax package",
+    "description": "Rusty Object Notation (RON) syntax highlighting and formatting",
     "publisher": "a5huynh",
     "license": "MIT",
     "homepage": "https://github.com/a5huynh/vscode-ron",
@@ -14,11 +14,26 @@
     },
     "version": "0.11.0",
     "engines": {
-        "vscode": "^1.30.0"
+        "vscode": "^1.75.0"
     },
     "categories": [
-        "Programming Languages"
+        "Programming Languages",
+        "Formatters"
     ],
+    "activationEvents": [
+        "onLanguage:ron"
+    ],
+    "main": "./out/extension.js",
+    "capabilities": {
+        "untrustedWorkspaces": {
+            "supported": "limited",
+            "description": "In untrusted workspaces the formatter path and arguments are only read from user settings.",
+            "restrictedConfigurations": [
+                "ron.formatter.path",
+                "ron.formatter.extraArgs"
+            ]
+        }
+    },
     "contributes": {
         "languages": [
             {
@@ -39,12 +54,60 @@
                 "scopeName": "source.ron",
                 "path": "./syntaxes/ron.tmGrammar.json"
             }
-        ]
+        ],
+        "configuration": {
+            "title": "RON",
+            "properties": {
+                "ron.formatter.path": {
+                    "type": "string",
+                    "default": "fmtron",
+                    "scope": "machine",
+                    "markdownDescription": "Formatter executable. It is run with the document on stdin and must print the formatted result to stdout. Defaults to [fmtron](https://crates.io/crates/fmtron) on `PATH` (`cargo install fmtron`)."
+                },
+                "ron.formatter.maxWidth": {
+                    "type": [
+                        "integer",
+                        "null"
+                    ],
+                    "minimum": 1,
+                    "default": null,
+                    "markdownDescription": "Soft maximum line width (`-w`). When unset, the project's `fmt.ron` or the formatter's default is used."
+                },
+                "ron.formatter.tabSize": {
+                    "type": [
+                        "integer",
+                        "null"
+                    ],
+                    "minimum": 1,
+                    "default": null,
+                    "markdownDescription": "Indentation size in spaces (`-t`). When unset, the project's `fmt.ron` or the formatter's default is used."
+                },
+                "ron.formatter.extraArgs": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "default": [],
+                    "markdownDescription": "Additional arguments passed to the formatter, e.g. `[\"--blank-lines\", \"remove\"]`."
+                }
+            }
+        },
+        "configurationDefaults": {
+            "[ron]": {
+                "editor.defaultFormatter": "a5huynh.vscode-ron"
+            }
+        }
     },
     "scripts": {
-        "test": "node test-grammar.js"
+        "vscode:prepublish": "npm run compile",
+        "compile": "tsc -p ./",
+        "watch": "tsc -watch -p ./",
+        "test": "npm run compile && node test-grammar.js && node --test test/*.test.js"
     },
     "devDependencies": {
+        "@types/node": "^18.19.130",
+        "@types/vscode": "~1.75.0",
+        "typescript": "^5.9.3",
         "vsce": "^2.14.0",
         "vscode-oniguruma": "^2.0.1",
         "vscode-textmate": "^9.3.2"
