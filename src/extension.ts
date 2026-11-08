@@ -71,7 +71,9 @@ async function formatDocument(
   );
   // fmt.ron discovery uses --stdin-filepath, not the cwd; the workspace folder
   // is only a base for relative paths in extraArgs (e.g. --config).
-  const cwd = vscode.workspace.getWorkspaceFolder(document.uri)?.uri.fsPath;
+  // Virtual workspace folders (e.g. vscode-vfs) have no local path to run in.
+  const folder = vscode.workspace.getWorkspaceFolder(document.uri);
+  const cwd = folder?.uri.scheme === "file" ? folder.uri.fsPath : undefined;
 
   const text = document.getText();
   try {
